@@ -1,0 +1,6 @@
+CREATE DATABASE IF NOT EXISTS customer_ticket_demo_db;
+
+USE customer_ticket_demo_db;
+
+
+
