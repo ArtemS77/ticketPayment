@@ -13,7 +13,7 @@ lombok, slf4j
 
 Сваггер доокументация:
 
-![alt text](https://github.com/ArtemSemeniuk7/customerTicketDemo/blob/master/swagger.png)
+![alt text](https://![изображение](https://user-images.githubusercontent.com/83453822/126065950-b2beb7bc-a0ca-46c6-9803-d26bb6225cbe.png))
 
 
 
