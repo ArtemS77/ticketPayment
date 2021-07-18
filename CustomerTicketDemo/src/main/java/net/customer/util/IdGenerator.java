@@ -1,4 +1,4 @@
-package net.customer.ticketPaymentService.util.idRandomGenerator;
+package net.customer.util;
 
 import org.springframework.stereotype.Component;
 

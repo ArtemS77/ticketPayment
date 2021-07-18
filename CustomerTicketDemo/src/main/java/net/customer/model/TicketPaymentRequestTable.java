@@ -1,6 +1,7 @@
 package net.customer.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -8,12 +9,11 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-@ApiModel(value = "class")
+@ApiModel(value = "ticket payment request model")
 @Component
 @Getter
 @Setter
@@ -22,17 +22,17 @@ import java.util.Date;
 @Table(name="ticket_payment_request_table")
 public class TicketPaymentRequestTable {
 
-    //@Transient
-    @OneToOne(fetch = FetchType.LAZY)
-    private RequestIdStatusTable requestIdStatusTable;
+    @JsonManagedReference
+    @OneToOne(mappedBy = "ticketPaymentRequestTable", fetch = FetchType.LAZY)
+    IdStatusTable statusTable;
 
     @Id
+    @Column(name = "request_id")
+    private Long requestId;
+
     @JsonProperty("routeNumber")
     @Column(name="route_number")
     private Long routeNumber;
-
-    @Column(name = "request_id")
-    private Long requestId;
 
     @JsonProperty("clientId")
     @Column(name = "client_id", updatable=false, nullable=false)

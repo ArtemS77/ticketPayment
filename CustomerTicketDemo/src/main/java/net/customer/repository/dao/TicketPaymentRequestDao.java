@@ -1,40 +1,73 @@
 package net.customer.repository.dao;
 
 import lombok.Setter;
-import net.customer.model.RequestIdStatusTable;
+import lombok.extern.slf4j.Slf4j;
 import net.customer.model.TicketPaymentRequestTable;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+import java.util.List;
+
+@Slf4j
 @Setter
 @Repository
-public class TicketPaymentRequestDao {
+public class TicketPaymentRequestDao implements Dao {
 
     @Autowired
-    private SessionFactory sessionFactory;
-    @Autowired
-    RequestIdStatusTable requestIdStatusTable;
+    SessionFactory sessionFactory;
 
-
-//    public void setSessionFactory(SessionFactory sessionFactory) {
-//        this.sessionFactory = sessionFactory;
-//    }
-
+    @Override
     @Transactional
-    public void saveTicketPaymentRequest(TicketPaymentRequestTable ticketPaymentRequestTable) {
+    public <TicketPaymentRequestTable>void save(TicketPaymentRequestTable ticketPaymentRequestTable) {
         Session session = this.sessionFactory.getCurrentSession();
+
         session.save(ticketPaymentRequestTable);
-        requestIdStatusTable.setRequestId(ticketPaymentRequestTable.getRequestId());
-        session.save(requestIdStatusTable);
     }
 
-    public TicketPaymentRequestTable getTicketPaymentRequest(long requestId) {
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+    public TicketPaymentRequestTable getById(Long requestId) {
         Session session = this.sessionFactory.getCurrentSession();
-        TicketPaymentRequestTable ticketPaymentRequestTable = (TicketPaymentRequestTable) session.get(TicketPaymentRequestTable.class, requestId);
+
+        TicketPaymentRequestTable ticketPaymentRequestTable = session.get(TicketPaymentRequestTable.class, requestId);
 
         return ticketPaymentRequestTable;
+    }
+
+    @Override
+    @Transactional
+    public <TicketPaymentRequestTable> void update(TicketPaymentRequestTable ticketPaymentRequestTable) {
+        Session session = this.sessionFactory.getCurrentSession();
+
+        session.update(ticketPaymentRequestTable);
+    }
+
+    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+    public List<TicketPaymentRequestTable> findPastPaymentRequestByClientId(Long clientId) {
+        Session session = this.sessionFactory.getCurrentSession();
+
+
+        String findPastPaymentRequestByClientId = "FROM TicketPaymentRequestTable " +
+                "WHERE request_date <= DATE(NOW()) AND client_id = " + clientId;
+
+        Query query = session.createQuery(findPastPaymentRequestByClientId);
+
+        List<TicketPaymentRequestTable> pastPaymentList = null;
+
+        try {
+            pastPaymentList = query.getResultList();
+        } catch (NoResultException noResultException) {
+            log.info("No list found for " + clientId);
+        }
+
+        System.out.println(pastPaymentList);
+
+        return pastPaymentList;
     }
 }
