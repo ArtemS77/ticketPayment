@@ -13,7 +13,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-@ApiModel(value = "ticket payment request model")
 @Component
 @Getter
 @Setter

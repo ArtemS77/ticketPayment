@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import javax.persistence.*;
 
-@ApiModel(value = "id status table model")
 @Setter
 @Getter
 @Component
