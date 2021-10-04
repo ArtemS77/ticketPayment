@@ -10,6 +10,8 @@ import net.customer.util.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Api(value = "ticket payment service")
@@ -21,12 +23,11 @@ public class TicketPaymentRequestService {
     @Qualifier("ticketPaymentRequestDao")
     Dao dao;
     @Autowired
-    IdStatusTable idStatusTable;
-    @Autowired
-    RequestIdStatusDao requestIdStatusDao;
+    RequestIdStatusService requestIdStatusService;
     @Autowired
     IdGenerator idGenerator;
 
+    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     public TicketPaymentRequestTable getTicketPaymentRequest(long id) {
         TicketPaymentRequestTable ticketPaymentRequestTable = dao.getById(id);
 
@@ -34,16 +35,17 @@ public class TicketPaymentRequestService {
         return ticketPaymentRequestTable;
     }
 
+    @Transactional
     public void saveTicketPaymentRequest(TicketPaymentRequestTable ticketPaymentRequestTable) {
         ticketPaymentRequestTable.setRequestId(idGenerator.generateUniqueId().get());
-        dao.save(ticketPaymentRequestTable);
+        IdStatusTable idStatusTable = requestIdStatusService.createDefaultIdStatusTable(ticketPaymentRequestTable.getRequestId());
 
-        idStatusTable.setRequestId(ticketPaymentRequestTable.getRequestId());
-        requestIdStatusDao.save(idStatusTable);
+        ticketPaymentRequestTable.setStatusTable(idStatusTable);
+        dao.save(ticketPaymentRequestTable);
 
         log.info(" ==== " + ticketPaymentRequestTable.getRouteNumber() + " is saved ==== ");
     }
-
+    @Transactional
     public void updateTicketPaymentRequest(TicketPaymentRequestTable ticketPaymentRequestTable) {
         ticketPaymentRequestTable.setRequestId(idGenerator.generateUniqueId().get());
         dao.update(ticketPaymentRequestTable);

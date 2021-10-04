@@ -23,7 +23,6 @@ public class RequestIdStatusDao implements Dao{
     SessionFactory sessionFactory;
 
     @Override
-    @Transactional
     public IdStatusTable getById(Long requestId) {
         Session session = this.sessionFactory.getCurrentSession();
 
@@ -33,7 +32,6 @@ public class RequestIdStatusDao implements Dao{
     }
 
     @Override
-    @Transactional
     public <IdStatusTable> void save(IdStatusTable idStatusTable) {
         Session session = this.sessionFactory.getCurrentSession();
 
@@ -41,7 +39,6 @@ public class RequestIdStatusDao implements Dao{
     }
 
     @Override
-    @Transactional
     public <IdStatusTable> void update(IdStatusTable idStatusTable) {
 
         Session session = sessionFactory.getCurrentSession();

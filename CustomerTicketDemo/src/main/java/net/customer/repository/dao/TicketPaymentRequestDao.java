@@ -23,7 +23,6 @@ public class TicketPaymentRequestDao implements Dao {
     SessionFactory sessionFactory;
 
     @Override
-    @Transactional
     public <TicketPaymentRequestTable>void save(TicketPaymentRequestTable ticketPaymentRequestTable) {
         Session session = this.sessionFactory.getCurrentSession();
 
@@ -31,7 +30,6 @@ public class TicketPaymentRequestDao implements Dao {
     }
 
     @Override
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     public TicketPaymentRequestTable getById(Long requestId) {
         Session session = this.sessionFactory.getCurrentSession();
 
@@ -41,14 +39,12 @@ public class TicketPaymentRequestDao implements Dao {
     }
 
     @Override
-    @Transactional
     public <TicketPaymentRequestTable> void update(TicketPaymentRequestTable ticketPaymentRequestTable) {
         Session session = this.sessionFactory.getCurrentSession();
 
         session.update(ticketPaymentRequestTable);
     }
 
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     public List<TicketPaymentRequestTable> findPastPaymentRequestByClientId(Long clientId) {
         Session session = this.sessionFactory.getCurrentSession();
 
@@ -65,8 +61,6 @@ public class TicketPaymentRequestDao implements Dao {
         } catch (NoResultException noResultException) {
             log.info("No list found for " + clientId);
         }
-
-        System.out.println(pastPaymentList);
 
         return pastPaymentList;
     }

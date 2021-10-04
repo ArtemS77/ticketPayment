@@ -23,7 +23,7 @@ import java.util.Date;
 public class TicketPaymentRequestTable {
 
     @JsonManagedReference
-    @OneToOne(mappedBy = "ticketPaymentRequestTable", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "ticketPaymentRequestTable", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     IdStatusTable statusTable;
 
     @Id

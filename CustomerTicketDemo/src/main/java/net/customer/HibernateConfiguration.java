@@ -77,5 +77,4 @@ public class HibernateConfiguration {
 
         return transactionManager;
     }
-    dtftfgygtftft
 }

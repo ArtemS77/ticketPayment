@@ -5,6 +5,8 @@ import net.customer.model.TicketPaymentRequestTable;
 import net.customer.repository.dao.TicketPaymentRequestDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,6 +21,7 @@ public class DateComparingService {
     @Autowired
     private TicketPaymentRequestDao ticketPaymentRequestDao;
 
+    @Transactional
     public List<TicketPaymentRequestTable> findPastRequests(Long clientId, String status) {
 
         List<TicketPaymentRequestTable> pastRequestsStatusList = StreamSupport
